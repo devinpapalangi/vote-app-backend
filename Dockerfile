@@ -2,7 +2,7 @@ FROM node:20 as build
 
 USER root
 
-RUN apt-get update && apt-get install -y docker.io
+
 
 WORKDIR /usr/src/app
 

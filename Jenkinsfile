@@ -42,7 +42,7 @@ pipeline{
         stage("Run container"){
             steps{
                 script{
-                    sh 'docker run -d -p 3000:80 --name vote-app-backend ${imageName}'
+                    sh 'docker run -d -p 3000:3000 --name vote-app-backend ${imageName}'
                 }
             }
         }
