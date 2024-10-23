@@ -10,34 +10,30 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
-import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOkResponse,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { Request } from 'express';
 import { UpsertUserRequest } from 'src/models/request/users/create.user.request';
 import { PaginationRequest } from 'src/models/request/users/pagination.request';
 import { User } from './entity/users';
 import { UserService } from './user.service';
+import { PaginationResponse } from 'src/models/response/pagination.response';
 
-@ApiTags('users')
-@ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
-@ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
-@ApiQuery({
-  name: 'search',
-  required: false,
-  type: String,
-  example: 'john_doe',
-})
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
   @Get()
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
-  @ApiQuery({
-    name: 'search',
-    required: false,
-    type: String,
-    example: 'john_doe',
-  })
+  @ApiQuery({ name: 'size', required: false, type: Number, example: 10 })
   @ApiQuery({
     name: 'search',
     required: false,
@@ -46,10 +42,13 @@ export class UserController {
   })
   @ApiResponse({
     status: 200,
-    type: [User],
+    type: PaginationResponse,
     description: 'Get all users',
   })
-  async findAll(@Query() query: PaginationRequest, @Req() request: Request) {
+  async findAll(
+    @Query() query: PaginationRequest,
+    @Req() request: Request,
+  ): Promise<PaginationResponse<User>> {
     return await this.userService.findAll(query, request);
   }
 
